@@ -1,0 +1,42 @@
+Problem,Algo,Num,Actions,Expansions,Time,PlanLength
+1, breadth_first_search,1,20,43,0.00247,6 
+1, depth_first_graph_search,2,20,21,0.00143,20
+1, uniform_cost_search, 3, 20, 60, 0.00390,6
+1, greedy_best_first_graph_search h_unmet_goals, 4, 20, 7, 0.00068,6
+1, greedy_best_first_graph_search h_pg_levelsum, 5, 20, 6, 0.0787,6
+1, greedy_best_first_graph_search h_pg_maxlevel, 6, 20, 6, 0.066,6
+1, greedy_best_first_graph_search h_pg_setlevel, 7, 20, 6, 0.2606,6
+1, astar_search h_unmet_goals, 8, 20, 50, 0.0066,6
+1, astar_search h_pg_levelsum, 9, 20, 28, 0.1838,6
+1, astar_search h_pg_maxlevel, 10, 20, 43, 0.1117,6
+1, astar_search h_pg_setlevel, 11, 20, 33, 0.5505,6
+2, breadth_first_search,1,72,3343,0.730,9
+2, depth_first_graph_search,2,72,624,1.004,619
+2, uniform_cost_search, 3, 72, 5154,1.299,9
+2, greedy_best_first_graph_search h_unmet_goals, 4, 72, 17, 0.0105,9
+2, greedy_best_first_graph_search h_pg_levelsum, 5, 72, 9, 1.568,9
+2, greedy_best_first_graph_search h_pg_maxlevel, 6, 72, 27, 3.045,9
+2, greedy_best_first_graph_search h_pg_setlevel, 7, 72, 9,6.031,9
+2, astar_search h_unmet_goals, 8, 72, 2467,0.8168,9
+2, astar_search h_pg_levelsum, 9, 72, 357,42.531,9
+2, astar_search h_pg_maxlevel, 10, 72, 2887,324.304,9
+2, astar_search h_pg_setlevel, 11, 72, 1037, 560.373,9
+3, breadth_first_search,1,88,14663,4.104,12
+3, depth_first_graph_search,2,88,408,0.393,392
+3, uniform_cost_search, 3, 88, 18510,5.708,12
+3, greedy_best_first_graph_search h_unmet_goals, 4, 88, 25, 0.0145,15
+3, greedy_best_first_graph_search h_pg_levelsum, 5, 88, 14, 4.045,14
+3, greedy_best_first_graph_search h_pg_maxlevel, 6, 88, 21, 4.138,13
+3, greedy_best_first_graph_search h_pg_setlevel, 7, 88, 35,33.229,17
+3, astar_search h_unmet_goals, 8, 88, 7388, 3.239,12
+3, astar_search h_pg_levelsum, 9, 88, 369,83.91,12
+3, astar_search h_pg_maxlevel, 10, 88, 9580, 1700.800,12
+3, astar_search h_pg_setlevel, 11, 88,3423,3264.2,12
+4, breadth_first_search,1,104,99736,41.316,14
+4, uniform_cost_search, 3, 104, 113339,56.94,14
+4, greedy_best_first_graph_search h_unmet_goals, 4, 104, 29, 0.0362,18
+4, greedy_best_first_graph_search h_pg_levelsum, 5, 104, 17, 9.976,17
+4, greedy_best_first_graph_search h_pg_maxlevel, 6, 104, 56, 13.989,17
+4, greedy_best_first_graph_search h_pg_setlevel, 7, 104, 107,195.328,23
+4, astar_search h_unmet_goals, 8, 104, 34330, 22.198,14
+4, astar_search h_pg_levelsum, 9,104,1208,556.365,14
