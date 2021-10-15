@@ -1,6 +1,91 @@
 
 from sample_players import DataPlayer
+import math
 
+
+class Node:
+
+    def __init__(self, state, parent, player_id):
+        self.parent = parent
+        self.state = state
+        self.untested_actions = state.actions()
+        self.children = [] 
+        self.actions = []
+        self.tot_plays = 0
+        self.wins = 0
+        self.player_id = player_id
+
+    def is_terminal(self):
+        return self.state.terminal_test()
+
+    def is_expanded(self):
+        return len(self.untested_actions) == 0
+    
+    def expand(self):
+        action = self.untested_actions.pop()
+        child_state = self.state.result(action)
+        child_node = Node(child_state, self, self.player_id)
+        self.children.append(child_node)
+        self.actions.append(action)
+        return child_node
+
+    def roll_out(self):
+        state = self.state
+        while not state.terminal_test():
+            action = random.choice(state.actions())
+            state = state.result(action)
+        return state.utility(self.player_id)
+
+    def get_best_action(self):
+        child_ucts = [child.UCT() for child in self.children]
+        arg_max = max(enumerate(child_ucts), key=lambda x: x[1])[0]
+        return self.actions[arg_max]
+
+    def backpropagate(self, reward):
+        self.wins += reward
+        self.tot_plays += 1
+        if self.parent is not None:
+            self.parent.backpropagate(reward)
+    
+    def UCT(self, const = math.sqrt(2)):
+        uct = self.wins/self.tot_plays
+        if self.parent is not None:
+            uct += const * math.sqrt(math.log(self.parent.tot_plays)/self.tot_plays)
+        return uct
+
+    def select(self):
+        child_ucts = [child.UCT() for child in self.children]
+        arg_max = max(enumerate(child_ucts), key=lambda x: x[1])[0]
+        return self.children[arg_max]
+
+class MonteCarloTreeSearch:
+
+    def __init__(self, root_state, player_id):
+        self.root_node = Node(root_state, None, player_id)
+
+    def run_mcts(self, root_node):
+        """ Monte Carlo Tree Search has 4 steps:
+            1. Selection
+            2. Expansion
+            3. Roll out
+            4. Back propagation 
+        """
+        steps = 0
+        while max_steps > steps:
+            leaf_node = self.select_node(root_node) # Expansion happens here as well
+            result = leaf_node.roll_out() #Simulate
+            leaf_node.backpropagate(result)
+            best_action = root_node.get_best_action()
+            self.queue.put(best_action)
+
+    def select_node(self, root_node):
+        node = root_node
+        while not node.is_terminal():
+            if not node.is_expanded():
+                return node.expand()
+            else:
+                node = node.select()
+        return node
 
 class CustomPlayer(DataPlayer):
     """ Implement your own agent to play knight's Isolation
