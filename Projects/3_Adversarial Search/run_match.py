@@ -13,7 +13,8 @@ from multiprocessing.pool import ThreadPool as Pool
 
 from isolation import Isolation, Agent, play
 from sample_players import RandomPlayer, GreedyPlayer, MinimaxPlayer
-from my_custom_player import CustomPlayer
+from my_custom_player import CustomPlayer, IterativeAlphaBeta
+from monte_carlo_player import MCTSPlayer
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,8 @@ TEST_AGENTS = {
     "RANDOM": Agent(RandomPlayer, "Random Agent"),
     "GREEDY": Agent(GreedyPlayer, "Greedy Agent"),
     "MINIMAX": Agent(MinimaxPlayer, "Minimax Agent"),
+    "ITERAB": Agent(IterativeAlphaBeta, "Iterative Alpha Beta"),
+    "MCTS": Agent(MCTSPlayer, "Monte Carlo Tree Search"),
     "SELF": Agent(CustomPlayer, "Custom TestAgent")
 }
 
@@ -105,13 +108,14 @@ def play_matches(custom_agent, test_agent, cli_args):
 
 def main(args):
     test_agent = TEST_AGENTS[args.opponent.upper()]
-    custom_agent = Agent(CustomPlayer, "Custom Agent")
+    custom_agent = TEST_AGENTS[args.custom.upper()]
+    # custom_agent = Agent(CustomPlayer, "Custom Agent")
     wins, num_games = play_matches(custom_agent, test_agent, args)
 
-    logger.info("Your agent won {:.1f}% of matches against {}".format(
-       100. * wins / num_games, test_agent.name))
-    print("Your agent won {:.1f}% of matches against {}".format(
-       100. * wins / num_games, test_agent.name))
+    res_str = "Your agent {} won {:.1f}% of matches against {}".format(
+       custom_agent.name, 100. * wins / num_games, test_agent.name)
+    logger.info(res_str)
+    print(res_str)
     print()
 
 
@@ -167,6 +171,15 @@ if __name__ == "__main__":
             for initial testing because they run more quickly than the minimax agent.
         """
     )
+
+    parser.add_argument(
+        '-c', '--custom', type=str, default='SELF', choices=list(TEST_AGENTS.keys()),
+        help="""\
+            Choose the player agent for testing. The random and greedy agents may be useful 
+            for initial testing because they run more quickly than the minimax agent.
+        """
+    )
+
     parser.add_argument(
         '-p', '--processes', type=int, default=NUM_PROCS,
         help="""\

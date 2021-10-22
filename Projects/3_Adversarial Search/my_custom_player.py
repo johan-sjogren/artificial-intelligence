@@ -1,5 +1,92 @@
-
+import random
+import math
 from sample_players import DataPlayer
+
+
+class IterativeAlphaBeta(DataPlayer):
+    """ Implement your own agent to play knight's Isolation
+
+    The get_action() method is the only required method for this project.
+    You can modify the interface for get_action by adding named parameters
+    with default values, but the function MUST remain compatible with the
+    default interface.
+
+    **********************************************************************
+    NOTES:
+    - The test cases will NOT be run on a machine with GPU access, nor be
+      suitable for using any other machine learning techniques.
+
+    - You can pass state forward to your agent on the next turn by assigning
+      any pickleable object to the self.context attribute.
+    **********************************************************************
+    """
+    def get_action(self, state):
+        self._iterative_alphabeta_action(state, 20, heuristic=self.score)
+
+    def score(self, state):
+        own_loc = state.locs[self.player_id]
+        opp_loc = state.locs[1 - self.player_id]
+        own_liberties = state.liberties(own_loc)
+        opp_liberties = state.liberties(opp_loc)
+        return len(own_liberties) - len(opp_liberties)
+
+    def _iterative_alphabeta_action(self,state, depth_limit, heuristic):
+        # Turns out "iterative deepening" is just a for loop...
+        best_move = None
+        for depth in range(1, depth_limit+1):
+            best_move = self.alpha_beta_search(state, depth, heuristic)
+            self.queue.put(best_move)
+
+    def alpha_beta_search(self, gameState, depth, heuristic):
+        """ Return the move along a branch of the game tree that
+        has the best possible value.  A move is a pair of coordinates
+        in (column, row) order corresponding to a legal move for
+        the searching player.
+    
+        You can ignore the special case of calling this function
+        from a terminal state.
+        """
+        alpha = float("-inf")
+        beta = float("inf")
+        best_score = float("-inf")
+        best_move = None
+        for a in gameState.actions():
+            v = self.ab_min_value(gameState.result(a), alpha, beta, depth - 1, heuristic)
+            alpha = max(alpha, v)
+            if v > best_score:
+                best_score = v
+                best_move = a
+        return best_move
+
+    def ab_min_value(self, state, alpha, beta, depth, heuristic):
+        """ Return the value for a win (+1) if the game is over,
+        otherwise return the minimum value over all legal child
+        nodes.
+        """
+        if state.terminal_test(): return state.utility(self.player_id)
+        if depth <= 0: return heuristic(state) # This is the heuristic
+    
+        v = float("inf")
+        for a in state.actions():
+            v = min(v, self.ab_max_value(state.result(a), alpha, beta, depth - 1, heuristic))
+            if v <= alpha: return v
+            beta = min(beta, v)
+        return v
+
+    def ab_max_value(self, state, alpha, beta, depth, heuristic):
+        """ Return the value for a loss (-1) if the game is over,
+        otherwise return the maximum value over all legal child
+        nodes.
+        """
+        if state.terminal_test(): return state.utility(self.player_id)
+        if depth <= 0: return heuristic(state) # This is the heuristic
+
+        v = float("-inf")
+        for a in state.actions():
+            v = max(v, self.ab_min_value(state.result(a), alpha, beta, depth - 1, heuristic))
+            if v >= beta: return v
+            alpha = max(alpha, v)
+        return v
 
 
 class CustomPlayer(DataPlayer):
@@ -36,15 +123,13 @@ class CustomPlayer(DataPlayer):
           Refer to (and use!) the Isolation.play() function to run games.
         **********************************************************************
         """
-        import random
         if state.ply_count < 2:
             self.queue.put(random.choice(state.actions()))
         # Use minimax with my_open - oppenent_open heuristic
         # self._minimax_action(state, depth=3, heuristic=self.score)
         # Iterative deepening_action
-        self._iterative_deepening_action(state, 10, heuristic=self.score)
-        # self._minimax_alphabeta_action(state, 5, self.score)
-        # self._iterative_alphabeta_action(state, 10, heuristic=self.score)
+        # self._iterative_deepening_action(state, 10, heuristic=self.score)
+        self._minimax_alphabeta_action(state, 7, self.score)
 
     def min_value(self, state, depth, heuristic):
         if state.terminal_test(): return state.utility(self.player_id)
@@ -172,3 +257,4 @@ class CustomPlayer(DataPlayer):
             if v >= beta: return v
             alpha = max(alpha, v)
         return v
+

@@ -1,0 +1,37 @@
+MCTS
+get_best_action  const win      rate    games   rollout    steps
+tot_plays        sqrt(2)        60      10      random     2000
+tot_plays        1/sqrt(2)      60      10      random     2000
+tot_plays        0.3            40      10      random     2000
+tot_plays        0.1            20      10      random     2000
+tot_plays        0.1            50      10      random     2000
+tot_plays        0              70      10      random     2000
+winrate          0.7            20      10      random     2000
+winrate          0.7            30      10      random     2000
+tot_plays        0.1            37.5    40      random     2000
+tot_plays        1/sqrt(2)      37.5    40      random     2000
+tot_plays        1/sqrt(2)      37.5    40      ungreedy   2000
+tot_plays        1/sqrt(2)      27.5    40      ungreedy   10000
+winrate          sqrt(2)        32.5    40      random   10000
+winrate          sqrt(2)        22.5    40      random   max
+tot_plays        sqrt(2)        40      40      random   max
+tot_plays        sqrt(2)        0      40      random   max    alternating rewards
+tot_plays        sqrt(2)        50      40      random   max    alternating rewards
+winrate          sqrt(2)        45      40      random   max    alternating rewards
+winrate          0.7            47.5      40      random   max    alternating rewards
+winrate          0.7            37.5      40      random   max    negative on loss
+tot_plays        0.7            45      40      random   max    negative on loss
+tot_plays        0.7            47.5      40      random   max    alternating rewards
+
+Iterative deepening
+40 Games 62.5% vs Base MiniMax 
+Iterative deepening (two first moves random)
+40 Games 67.5% vs Base MiniMax 
+Iterative alphabeta action (two first moves random)
+40 Games 72.5% vs Base MiniMax
+Iterative alphabeta action (two first moves random)
+40 Games 70% vs Base MiniMax
+Iterative alphabeta action max depth 20 (two first moves random)
+40 Games 70% vs Base MiniMax
+Alphabeta action max depth 5 (two first moves random)
+40 Games 62.5% vs Base MiniMax
