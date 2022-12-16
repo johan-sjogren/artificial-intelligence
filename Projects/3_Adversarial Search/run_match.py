@@ -13,8 +13,7 @@ from multiprocessing.pool import ThreadPool as Pool
 
 from isolation import Isolation, Agent, play
 from sample_players import RandomPlayer, GreedyPlayer, MinimaxPlayer
-from my_custom_player import CustomPlayer, IterativeAlphaBeta
-from monte_carlo_player import MCTSPlayer
+from my_custom_player import CustomPlayer, IterativeAlphaBeta 
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,9 @@ TEST_AGENTS = {
     "GREEDY": Agent(GreedyPlayer, "Greedy Agent"),
     "MINIMAX": Agent(MinimaxPlayer, "Minimax Agent"),
     "ITERAB": Agent(IterativeAlphaBeta, "Iterative Alpha Beta"),
-    "MCTS": Agent(MCTSPlayer, "Monte Carlo Tree Search"),
+    "SELFITERAB": Agent(IterativeAlphaBeta, "Iterative Alpha Beta vs self"),
+    "MCTS": Agent(CustomPlayer, "Monte Carlo Tree Search"),
+    "SELFMCTS": Agent(CustomPlayer, "Monte Carlo Tree Search vs self"),
     "SELF": Agent(CustomPlayer, "Custom TestAgent")
 }
 
@@ -38,10 +39,15 @@ def _run_matches(matches, name, num_processes=NUM_PROCS, debug=False):
     results = []
     pool = Pool(1) if debug else Pool(num_processes)
     print("Running {} games:".format(len(matches)))
+    wins = 0
+    tot = 0
     for result in pool.imap_unordered(play, matches):
         print("+" if result[0].name == name else '-', end="")
+        tot +=1 
+        if result[0].name == name:
+            wins += 1
         results.append(result)
-    print()
+    print(" ", wins, "/", tot)
     return results
 
 

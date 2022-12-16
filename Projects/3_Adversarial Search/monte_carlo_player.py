@@ -62,6 +62,14 @@ class Node:
         child_ucts = [child.UCT(const=0) for child in self.children]
         # child_ucts = [child.tot_plays for child in self.children]
         # child_ucts = [child.wins for child in self.children] # Bad
+        if len(child_ucts) == 0:
+            action = random.choice(self.untested_actions)
+            child_state = self.state.result(action)
+            child_node = Node(child_state, self, self.player_id)
+            self.children.append(child_node)
+            self.actions.append(action)
+            return action, child_state
+
         arg_max = max(enumerate(child_ucts), key=lambda x: x[1])[0]
         return self.actions[arg_max], self.children[arg_max]
 
@@ -73,7 +81,10 @@ class Node:
             self.parent.backpropagate(reward)
     
     def UCT(self, const = math.sqrt(2)):
-        uct = self.wins/self.tot_plays
+        if self.tot_plays > 0:
+            uct = self.wins/self.tot_plays
+        else:
+            return 0.0
         if self.parent is not None:
             uct += const * math.sqrt(2*math.log(self.parent.tot_plays)/self.tot_plays)
         return uct
@@ -140,10 +151,3 @@ class MCTSPlayer(DataPlayer):
             self.queue.put(best_action)
             best_child_node.parent = None
             self.context = best_child_node 
-
-    def score(self, state):
-        own_loc = state.locs[self.player_id]
-        opp_loc = state.locs[1 - self.player_id]
-        own_liberties = state.liberties(own_loc)
-        opp_liberties = state.liberties(opp_loc)
-        return len(own_liberties) - len(opp_liberties)

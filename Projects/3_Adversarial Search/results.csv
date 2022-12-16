@@ -1,0 +1,11 @@
+                Player Algo
+Opponent        MCTS         Iterativ Deepening with AB-pruning
+RANDOM*         90%/100%     80%/90%
+GREEDY*         70%/70%      70%/90%
+MINIMAX         36%/36%      78%/72%
+MINIMAX(-p 2)   26%/40%      78%/84%
+MTCS(-p 2)      54%/58%      82%/84%
+ITERAB (-p 2)   6%/2%        60%/46%
+
+* 10 Round i.e. 20 Games + fair = 40
+25 Rounds i.e 50 Games + fair = 100
